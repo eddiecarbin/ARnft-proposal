@@ -58,7 +58,7 @@
       // JSON data example - for brevity ill just make an object
       let videoData = {
         "marker":"./data/pinball",
-        "video" :"./data/duck.glb"
+        "video" :"./data/test.mp4"
       }
       
       let video = await ARNFT.BasicVideoTextureLoaderBJS.loadVideo(videoMarker.video, renderer.getScene());
@@ -68,7 +68,7 @@
       // JSON data example - for brevity ill just make an object
       let imageData = {
         "marker":"./data/trex",
-        "video" :"./data/duck.glb"
+        "video" :"./data/test.png"
       }
       let image = await ARNFT.BasicImageTextureLoaderBJS.loadVideo(imageData.video, renderer.getScene());
       let imageMarker = new ARNFT.NFTImageBJS( image, imageData.marker );
