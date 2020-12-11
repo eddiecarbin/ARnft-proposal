@@ -1,16 +1,16 @@
 
 
-export class ICameraViewRenderer{
-
+export interface ICameraViewRenderer {
+    getImage(): ImageData;
 }
 
 export class CameraViewRenderer implements ICameraViewRenderer {
-    
-    
+
+
     private canvas_process: HTMLCanvasElement;
 
     private context_process: CanvasRenderingContext2D;
-    
+
     public video: HTMLVideoElement;
 
     private vw: number;
@@ -25,7 +25,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     private ox: number;
     private oy: number;
 
-    constructor( video : HTMLVideoElement ){
+    constructor(video: HTMLVideoElement) {
         this.canvas_process = document.createElement('canvas');
         this.context_process = this.canvas_process.getContext('2d');
 
@@ -52,8 +52,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         this.context_process.fillRect(0, 0, this.pw, this.ph);
     }
 
-    public getImage() : ImageData
-    {
+    public getImage(): ImageData {
         this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
         return this.context_process.getImageData(0, 0, this.pw, this.ph);
     }

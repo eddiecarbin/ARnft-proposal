@@ -1,4 +1,4 @@
-import { NFTEntity } from "app/model/NFTEntity";
+import { NFTEntity } from "app/core/NFTEntity";
 import * as BABYLON from 'babylonjs';
 
 export abstract class NFTRootBJS extends NFTEntity {

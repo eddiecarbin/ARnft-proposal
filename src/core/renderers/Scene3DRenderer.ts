@@ -1,13 +1,12 @@
 
 
 export interface IScene3DRenderer {
-
+    update(): void;
 }
 
-export class Scene3DRenderer implements IScene3DRenderer{
+export class Scene3DRenderer implements IScene3DRenderer {
 
     public canvas_draw!: HTMLCanvasElement;
-
 
     public initialize(sceneData: any): Promise<boolean> {
 
