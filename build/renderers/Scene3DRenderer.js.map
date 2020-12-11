@@ -1,0 +1,1 @@
+{"version":3,"file":"Scene3DRenderer.js","sourceRoot":"","sources":["../../src/renderers/Scene3DRenderer.ts"],"names":[],"mappings":"AAMA,MAAM,OAAO,eAAe;IAKjB,UAAU,CAAC,SAAc;QAE5B,IAAI,CAAC,WAAW,GAAG,QAAQ,CAAC,cAAc,CAAC,QAAQ,CAAsB,CAAC;QAE1E,OAAO,OAAO,CAAC,MAAM,CAAC,KAAK,CAAC,CAAC;IACjC,CAAC;IAEM,MAAM;IAEb,CAAC;CACJ"}
