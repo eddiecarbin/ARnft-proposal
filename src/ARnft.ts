@@ -6,48 +6,72 @@ export class ARnft {
 
     private videoRenderer: ICameraViewRenderer;
 
-    private cameraData : string;
+    private cameraData: string;
 
-    private workerURL : string;
+    private workerURL: string;
+
+    private _fps: number = 15;
+
+    private _lastTime: number = 0;
 
     // events
     public static readonly EVENT_SET_CAMERA: string = "ARNFT_SET_CAMERA_EVENT";
     public static readonly EVENT_FOUND_MARKER: string = "ARNFT_FOUND_MARKER_EVENT";
     public static readonly EVENT_LOST_MARKER: string = "ARNFT_LOST_MARKER_EVENT";
 
-    constructor(video: ICameraViewRenderer, camData : string, worker?:string) {
+    constructor(video: ICameraViewRenderer, camData: string, worker?: string) {
         this.videoRenderer = video;
         this.cameraData = camData;
         this.workerURL = worker;
+        // set default fps at 15
+        this.setFPS(this._fps);
     }
 
     public addNFTEnity(name: string, entity: NFTEntity): NFTEntity {
         this._controllers.set(name, entity);
         return entity;
     }
-    
+
     public getEntityByName(name: string): NFTEntity {
         if (!this._controllers.has(name))
-        return null;
-        
+            return null;
+
         return this._controllers.get(name);
     }
-    
+
     public getCameraView(): ICameraViewRenderer {
         return this.videoRenderer;
     }
 
+    public setFPS(value: number): void {
+        this._fps = 1000 / value;
+    }
+
     public initialize(): Promise<boolean> {
 
-        //  loop through 
-        return Promise.resolve(true);
+        const promises: Promise<boolean>[] = [];
+        this._controllers.forEach(element => {
+            promises.push(element.initialize(this.cameraData));
+        });
+
+        return Promise.all(promises).then(() => {
+            return true;
+        });
     }
-    
+
     public update(): void {
-        let imageData = this.videoRenderer.getImage();
+        let time: number = Date.now();
+        let imageData : ImageData;
+        
+        if (time - this._lastTime > this._fps) {
+            imageData = this.videoRenderer.getImage();
+        }
+        this._lastTime = time;
+    
         this._controllers.forEach(element => {
             element.update();
-            element.process(imageData);
+            if ( imageData )
+                element.process(imageData);
         });
     }
 }

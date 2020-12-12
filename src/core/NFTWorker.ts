@@ -9,7 +9,7 @@ export class NFTWorker {
 
     private markerData: any;
 
-    private _hadProcessed: boolean = false;
+    private _processing: boolean = false;
 
     private vw: number;
     private vh: number;
@@ -39,10 +39,10 @@ export class NFTWorker {
 
     public process(imageData: ImageData) {
 
-        if (!this._hadProcessed) {
+        if (this._processing) {
             return;
         }
-        this._hadProcessed = false;
+        this._processing = true;
         this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
     }
 
@@ -89,7 +89,7 @@ export class NFTWorker {
                         break;
                     }
                 }
-                this._hadProcessed = true;
+                this._processing = false;
             };
         });
     };

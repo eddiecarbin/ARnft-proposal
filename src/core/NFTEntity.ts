@@ -13,15 +13,17 @@ export class NFTEntity extends EventTarget {
 
     protected world: any;
 
-    constructor(workerURL: string, cameraURL: string) {
+    protected _markerURL : string;
+
+    constructor(markerURL : string) {
         super();
-        this._workerURL = workerURL;
-        this._cameraURL = cameraURL;
+        this._markerURL = markerURL;
     }
 
-    public initialize(markerURL: string): Promise<boolean> {
+    public initialize(cameraData : string): Promise<boolean> {
+        this._cameraURL = cameraData;
         this._worker = new NFTWorker(this);
-        return this._worker.initialize(this._workerURL, this._cameraURL, markerURL);
+        return this._worker.initialize(this._workerURL, this._cameraURL, this._markerURL);
     }
 
     public found(msg: any): void {
