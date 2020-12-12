@@ -1,3 +1,4 @@
+import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { NFTEntity } from "./core/NFTEntity";
 import { CameraViewRenderer, ICameraViewRenderer } from "./core/renderers/CamerViewRenderer";
 
@@ -9,6 +10,8 @@ export class ARnft {
     private cameraData: string;
 
     private workerURL: string;
+    
+    private test : AbstractMesh;
 
     private _fps: number = 15;
 

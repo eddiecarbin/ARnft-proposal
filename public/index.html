@@ -19,7 +19,7 @@
   <script type="module" src="../build/arnft.core.js"></script>
   <!-- user should load CDN    arnft.core.js -->
   <!-- user can select 3d renderer and load CDN    arnft.babylonjs.js or arnft.threejs.js-->
-  
+
   <script>
     let context;
 
@@ -54,7 +54,7 @@
       
       // remove all loading work not asscoiated with ARnft.  I.E  asset types
       // provide a basic 3d model loader class as an example.  But it can be extended or dev can make thier own.  ARnft core should just expect the appropiate 3d model not do loading work.
-      let duck3DModel = await ARNFT.Basic3DLoaderBabylonJS.loadModel( duckData.model, renderer.getScene()  );
+      let duck3DModel = await ARNFT.Basic3DLoaderBabylonJS.loadModel(duckData.model, renderer.getScene());
 
       let duckModelMarker = new ARNFT.NFT3DModelBJS ( duck3DModel, duckData.marker, workerURL );
       arnft.addMarker ( duckModelMarker );
@@ -74,7 +74,7 @@
         "marker":"./data/trex",
         "image" :"./data/test.png"
       }
-      let image = await ARNFT.BasicImageTextureLoaderBJS.loadImage(imageData.video, renderer.getScene());
+      let image = await ARNFT.BasicImageTextureLoaderBJS.loadImage(imageData.image, renderer.getScene());
       let imageMarker = new ARNFT.NFTImageBJS( image, imageData.marker, workerURL );
       arnft.addMarker ( imageMarker );
       

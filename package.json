@@ -7,12 +7,14 @@
     "build": "rimraf ./build && tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start3": "npm run build",
-    "start": "rimraf ./build && rollup -c && tsc"
+    "start": "rimraf ./build && tsc && rollup -c"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babylonjs/core": "^4.2.0",
+    "@babylonjs/loaders": "^4.2.0",
     "@types/node": "^14.14.10",
     "rimraf": "^3.0.2",
     "typescript": "^4.1.2"
@@ -20,9 +22,9 @@
   "dependencies": {
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
-    "babylonjs": "^4.2.0",
     "rollup": "^2.34.2",
     "rollup-plugin-external-globals": "^0.6.1",
+    "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.29.0"
   }
