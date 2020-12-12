@@ -1,6 +1,5 @@
 import { NFTWorker } from "./NFTWorker";
 
-
 export class NFTEntity extends EventTarget {
 
     public onNFTDataCallback!: Function;
@@ -18,12 +17,12 @@ export class NFTEntity extends EventTarget {
     constructor(markerURL : string) {
         super();
         this._markerURL = markerURL;
+        this._worker = new NFTWorker(this, this._markerURL);
     }
 
     public initialize(cameraData : string): Promise<boolean> {
         this._cameraURL = cameraData;
-        this._worker = new NFTWorker(this);
-        return this._worker.initialize(this._workerURL, this._cameraURL, this._markerURL);
+        return this._worker.initialize(this._workerURL, this._cameraURL);
     }
 
     public found(msg: any): void {

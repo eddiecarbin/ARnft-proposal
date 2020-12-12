@@ -7,7 +7,7 @@ export class NFTWorker {
 
     private worker: Worker;
 
-    private markerData: any;
+    private markerURL: any;
 
     private _processing: boolean = false;
 
@@ -20,16 +20,16 @@ export class NFTWorker {
     private pw: number;
     private ph: number;
 
-    constructor(d: NFTEntity) {
+    constructor(d: NFTEntity, markerURL: string) {
         this._dispatcher = d;
+        this.markerURL = markerURL;
     }
-    
-    public initialize( workerURL:string, cameraURL: string, markerURL: string): Promise<boolean> {
-        // this.markerData = data.markerData;
-        return new Promise<boolean>(async (resolve, reject) => {
+
+    public initialize(workerURL: string, cameraURL: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
             this.worker = new Worker(workerURL);
-            this.worker.onmessage = async (ev) => {
-                await this.load(cameraURL).then(() => {
+            this.worker.onmessage = (ev) => {
+                this.load(cameraURL).then(() => {
                     resolve(true);
                 });
             };
@@ -46,9 +46,9 @@ export class NFTWorker {
         this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
     }
 
-    protected load(cameraURL:string): Promise<boolean> {
+    protected load(cameraURL: string): Promise<boolean> {
 
-        return new Promise<boolean>(async (resolve, reject) => {
+        return new Promise<boolean>((resolve, reject) => {
             var camera_para = cameraURL;
             // var camera_para = '../../data/camera_para-iPhone 5 rear 640x480 1.0m.dat';
 
@@ -64,7 +64,7 @@ export class NFTWorker {
                 pw: this.pw,
                 ph: this.ph,
                 camera_para: camera_para,
-                marker: this.markerData.url
+                marker: this.markerURL
             });
 
             this.worker.onmessage = (ev) => {
