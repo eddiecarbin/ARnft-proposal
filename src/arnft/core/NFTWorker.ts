@@ -1,4 +1,4 @@
-import { ARnft } from "app/ARnft";
+import { ARnft } from "app/arnft/ARnft";
 import { NFTEntity } from "./NFTEntity";
 
 export class NFTWorker {

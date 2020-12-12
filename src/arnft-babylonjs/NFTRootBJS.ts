@@ -1,4 +1,4 @@
-import { NFTEntity } from "app/core/NFTEntity";
+import { NFTEntity } from "app/arnft/core/NFTEntity";
 import { Matrix, Quaternion, Vector3 } from "@babylonjs/core/Maths/math";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 

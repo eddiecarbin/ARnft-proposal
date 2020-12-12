@@ -28,9 +28,9 @@
       //  namespace of ARNFT
       //  pick your renderer.  I want to suggest that ARNft supports BabylonJS first.   Several reasons but ill start with its a better Game Engine/Framework. AR needs game features.
       //  Though THREEJS is a good framework!
-      const renderer = new ARNFT.Scene3DRendererBJS(); //  or Scene3DRendererTHREE.js
-      
+      const renderer = new ARNFT.Scene3DRendererBJS("canvas"); //  or Scene3DRendererTHREE.js
       await renderer.initialize();
+      // add lights and camera here!
       
       // init the cameraview
       let cameraView = new ARNFT.CameraViewRenderer();
