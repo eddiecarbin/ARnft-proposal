@@ -28,10 +28,11 @@
       //  pick your renderer.  I want to suggest that ARNft supports BabylonJS first.   Several reasons but ill start with its a better Game Engine/Framework. AR needs game features.
       //  Though THREEJS is a good framework!
       const renderer = new ARNFT.Scene3DRendererBJS(); //  or Scene3DRendererTHREE.js
+      
       await renderer.initialize();
       
       // init the cameraview
-      const cameraView = new ARNFT.CameraViewRenderer();
+      let cameraView = new ARNFT.CameraViewRenderer();
       await cameraView.initialize();
 
       
@@ -40,7 +41,9 @@
       let workerURL = './resources/jsartoolkit5/artoolkit/artoolkit.wasm_worker.js';
       let cameraURL = '../../data/camera_para.dat';
       
-      const arnft = new ARNFT.ARnft(cameraView, workerURL, cameraURL);
+      const arnft = new ARNFT.ARnft(cameraView, cameraURL);
+      // arfnt can be throttle.  not sure if this is a good idea
+      arnft.setFPS( 15 );
 
       // JSON data example - for brevity ill just make an object
       let duckData = {
@@ -52,7 +55,7 @@
       // provide a basic 3d model loader class as an example.  But it can be extended or dev can make thier own.  ARnft core should just expect the appropiate 3d model not do loading work.
       let duck3DModel = await ARNFT.Basic3DLoaderBabylonJS.loadModel( duckData.model, renderer.getScene()  );
 
-      let duckModelMarker = new ARNFT.NFT3DModelBJS ( duck3DModel, duckData.marker );
+      let duckModelMarker = new ARNFT.NFT3DModelBJS ( duck3DModel, duckData.marker, workerURL );
       arnft.addMarker ( duckModelMarker );
       
       // JSON data example - for brevity ill just make an object
@@ -62,7 +65,7 @@
       }
       
       let video = await ARNFT.BasicVideoTextureLoaderBJS.loadVideo(videoMarker.video, renderer.getScene());
-      let videoMarker = new ARNFT.NFTVideoBJS ( video, videoData.marker );
+      let videoMarker = new ARNFT.NFTVideoBJS ( video, videoData.marker, workerURL );
       arnft.addMarker ( videoMarker );
 
       // JSON data example - for brevity ill just make an object
@@ -70,8 +73,8 @@
         "marker":"./data/trex",
         "image" :"./data/test.png"
       }
-      let image = await ARNFT.BasicImageTextureLoaderBJS.loadVideo(imageData.video, renderer.getScene());
-      let imageMarker = new ARNFT.NFTImageBJS( image, imageData.marker );
+      let image = await ARNFT.BasicImageTextureLoaderBJS.loadImage(imageData.video, renderer.getScene());
+      let imageMarker = new ARNFT.NFTImageBJS( image, imageData.marker, workerURL );
       arnft.addMarker ( imageMarker );
       
       // init arnft .  arnft now can track multple markers and present multiple media types.   initilize them all here
