@@ -6,7 +6,6 @@ export interface ICameraViewRenderer {
 
 export class CameraViewRenderer implements ICameraViewRenderer {
 
-
     private canvas_process: HTMLCanvasElement;
 
     private context_process: CanvasRenderingContext2D;

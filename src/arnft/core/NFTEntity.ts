@@ -1,6 +1,14 @@
 import { NFTWorker } from "./NFTWorker";
 
+export interface IMediaNode {
+    update():void;
+    found(value:any):void;
+}
+
 export class NFTEntity extends EventTarget {
+
+
+    private _nodes: IMediaNode[] = [];
 
     public onNFTDataCallback!: Function;
 
@@ -10,27 +18,29 @@ export class NFTEntity extends EventTarget {
 
     private _cameraURL: string;
 
-    protected world: any;
+    protected orientationMatrix: any;
 
     protected _markerURL : string;
 
-    constructor(markerURL : string) {
+    constructor( node : IMediaNode, markerURL : string) {
         super();
         this._markerURL = markerURL;
         this._worker = new NFTWorker(this, this._markerURL);
+
+        this._nodes.push(node);
     }
 
-    public initialize(cameraData : string): Promise<boolean> {
+    public initialize(workerURL : string, cameraData : string): Promise<boolean> {
+        this._workerURL = workerURL;
         this._cameraURL = cameraData;
         return this._worker.initialize(this._workerURL, this._cameraURL);
     }
 
     public found(msg: any): void {
-        if (!msg) {
-            this.world = null;
-        } else {
-            this.world = JSON.parse(msg.matrixGL_RH);
-        }
+        this.orientationMatrix = (msg)? JSON.parse(msg.matrixGL_RH): null;
+        this._nodes.forEach(element => {
+            element.found(this.orientationMatrix);
+        });
     }
 
     public process(imageData: ImageData) { 
@@ -38,14 +48,9 @@ export class NFTEntity extends EventTarget {
     }
 
     public update(): void {
-
-    }
-
-    protected getArrayMatrix(value: any): any {
-        var array: any = [];
-        for (var key in value) {
-            array[key] = value[key]; //.toFixed(4);
-        }
-        return array;
+        //  loop through nodes and update
+        this._nodes.forEach(element => {
+            element.update();
+        });
     }
 }

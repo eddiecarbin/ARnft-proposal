@@ -10,3 +10,10 @@ export function isMobile(): boolean {
     }
     return false;
 }
+export function isIOS(): boolean {
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        // true for mobile device
+        return true;
+    }
+    return false;
+}

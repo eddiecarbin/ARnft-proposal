@@ -1,8 +1,10 @@
-import { NFTEntity } from "app/arnft/core/NFTEntity";
 import { Matrix, Quaternion, Vector3 } from "@babylonjs/core/Maths/math";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
+import { IMediaNode } from "app/arnft/core/NFTEntity";
 
-export abstract class NFTRootBJS extends NFTEntity {
+export abstract class NFTNodeBJS implements IMediaNode  {
+
+    protected world: any;
 
     private _hasFound: boolean = false;
 
@@ -48,10 +50,11 @@ export abstract class NFTRootBJS extends NFTEntity {
         ]
     }
 
+    public found(world:any){
+        this.world = world;
+    }
 
     public update(): void {
-
-
         if (!this.world) {
             this._hasFound = false;
             this._frameDrops = 0;
@@ -95,5 +98,13 @@ export abstract class NFTRootBJS extends NFTEntity {
 
             this._root.setAbsolutePosition(pos);
         }
+    }
+
+    protected getArrayMatrix(value: any): any {
+        var array: any = [];
+        for (var key in value) {
+            array[key] = value[key]; //.toFixed(4);
+        }
+        return array;
     }
 }

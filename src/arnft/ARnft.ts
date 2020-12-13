@@ -1,5 +1,5 @@
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
-import { NFTEntity } from "./core/NFTEntity";
+import { IMediaNode, NFTEntity } from "./core/NFTEntity";
 import { CameraViewRenderer, ICameraViewRenderer } from "./core/renderers/CamerViewRenderer";
 
 export class ARnft {
@@ -10,8 +10,8 @@ export class ARnft {
     private cameraData: string;
 
     private workerURL: string;
-    
-    private test : AbstractMesh;
+
+    private test: AbstractMesh;
 
     private _fps: number = 15;
 
@@ -30,8 +30,9 @@ export class ARnft {
         this.setFPS(this._fps);
     }
 
-    public addNFTEnity(name: string, entity: NFTEntity): NFTEntity {
-        this._controllers.set(name, entity);
+    public addNFTEnity(node: IMediaNode, markerDataURL: string): NFTEntity {
+        let entity = new NFTEntity(node, markerDataURL);
+        this._controllers.set("", entity);
         return entity;
     }
 
@@ -50,11 +51,11 @@ export class ARnft {
         this._fps = 1000 / value;
     }
 
-    public initialize(): Promise<boolean> {
+    public initialize(workerURL: string): Promise<boolean> {
 
         const promises: Promise<boolean>[] = [];
         this._controllers.forEach(element => {
-            promises.push(element.initialize(this.cameraData));
+            promises.push(element.initialize(workerURL, this.cameraData));
         });
 
         return Promise.all(promises).then(() => {
@@ -64,16 +65,16 @@ export class ARnft {
 
     public update(): void {
         let time: number = Date.now();
-        let imageData : ImageData;
-        
+        let imageData: ImageData;
+
         if (time - this._lastTime > this._fps) {
             imageData = this.videoRenderer.getImage();
         }
         this._lastTime = time;
-    
+
         this._controllers.forEach(element => {
             element.update();
-            if ( imageData )
+            if (imageData)
                 element.process(imageData);
         });
     }

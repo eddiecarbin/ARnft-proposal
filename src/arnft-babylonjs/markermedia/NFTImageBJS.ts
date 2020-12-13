@@ -1,6 +1,6 @@
-import { NFTRootBJS } from "../NFTRootBJS";
+import { NFTNodeBJS } from "../NFTRootBJS";
 
 
-export class NFTImageBJS extends NFTRootBJS {
+export class NFTImageBJS extends NFTNodeBJS {
 
 }

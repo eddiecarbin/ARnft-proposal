@@ -3,10 +3,12 @@ import { Engine } from "@babylonjs/core/Engines/engine";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { Color3, Color4, Vector3 } from "@babylonjs/core/Maths/math";
 import { Scene } from "@babylonjs/core/scene";
-import { Scene3DRenderer } from "app/arnft/core/renderers/Scene3DRenderer";
 import { IShadowLight, DirectionalLight, HemisphericLight } from "@babylonjs/core/Lights";
 
-export class SceneRendererBJS extends Scene3DRenderer {
+export class SceneRendererBJS {
+
+    public canvas_draw: HTMLCanvasElement;
+
 
     private engine: Engine;
 
@@ -21,8 +23,9 @@ export class SceneRendererBJS extends Scene3DRenderer {
     public light: IShadowLight;
     public shadowGenerator: ShadowGenerator;
     
-    constructor ( canvasID : string, scene?:Scene ){
-        super(canvasID);
+    constructor ( canvasElement : HTMLCanvasElement, scene?:Scene ){
+        this.canvas_draw = canvasElement;
+
         this._scene = scene;
     }
 
