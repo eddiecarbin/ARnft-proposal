@@ -14,15 +14,11 @@ export class NFTWorker {
     private vw: number;
     private vh: number;
 
-    private w: number;
-    private h: number;
-
-    private pw: number;
-    private ph: number;
-
-    constructor(d: NFTEntity, markerURL: string) {
+    constructor(d: NFTEntity, markerURL: string, w: number, h: number) {
         this._dispatcher = d;
         this.markerURL = markerURL;
+        this.vw = w;
+        this.vh = h;
     }
 
     public initialize(workerURL: string, cameraURL: string): Promise<boolean> {
@@ -30,6 +26,15 @@ export class NFTWorker {
             this.worker = new Worker(workerURL);
             this.worker.onmessage = (ev) => {
                 this.load(cameraURL).then(() => {
+                    // Overwrite load onmessage with search onmessage
+                    this.worker.onmessage = (ev) => {
+
+                        // console.log("response found = " + (ev.data.type == "found"));
+                        let msg: any = (ev.data.type == "found") ? ev.data : null;
+                        this._dispatcher.found(msg);
+                        this._processing = false;
+                    };
+                    //
                     resolve(true);
                 });
             };
@@ -40,30 +45,31 @@ export class NFTWorker {
     public process(imageData: ImageData) {
 
         if (this._processing) {
+            // console.log("because i am sooooooooooooo slow")
             return;
         }
         this._processing = true;
-        this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
+
+        //this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
+        this.worker.postMessage({ type: 'process', imagedata: imageData });
     }
 
     protected load(cameraURL: string): Promise<boolean> {
 
         return new Promise<boolean>((resolve, reject) => {
-            var camera_para = cameraURL;
-            // var camera_para = '../../data/camera_para-iPhone 5 rear 640x480 1.0m.dat';
 
             var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
 
-            this.w = this.vw * pscale;
-            this.h = this.vh * pscale;
-            this.pw = Math.max(this.w, (this.h / 3) * 4);
-            this.ph = Math.max(this.h, (this.w / 4) * 3);
+            let w: number = this.vw * pscale;
+            let h: number = this.vh * pscale;
+            let pw: number = Math.max(w, (h / 3) * 4);
+            let ph: number = Math.max(h, (w / 4) * 3);
 
             this.worker.postMessage({
                 type: 'load',
-                pw: this.pw,
-                ph: this.ph,
-                camera_para: camera_para,
+                pw: pw,
+                ph: ph,
+                camera_para: cameraURL,
                 marker: this.markerURL
             });
 
@@ -72,20 +78,12 @@ export class NFTWorker {
                 switch (msg.type) {
                     case 'loaded': {
                         var proj = JSON.parse(msg.proj);
-                        this._dispatcher.dispatchEvent(new CustomEvent(ARnft.EVENT_SET_CAMERA, proj));
+                        // this._dispatcher.dispatchEvent(new CustomEvent(ARnft.EVENT_SET_CAMERA, proj));
                         break;
                     }
                     case "endLoading": {
                         if (msg.end == true)
                             resolve(true);
-                        break;
-                    }
-                    case 'found': {
-                        this._dispatcher.found(msg);
-                        break;
-                    }
-                    case 'not found': {
-                        this._dispatcher.found(null);
                         break;
                     }
                 }

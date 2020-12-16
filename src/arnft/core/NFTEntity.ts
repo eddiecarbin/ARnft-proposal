@@ -1,16 +1,21 @@
 import { NFTWorker } from "./NFTWorker";
 
 export interface IMediaNode {
-    update():void;
-    found(value:any):void;
+    update(): void;
+    found(value: any): void;
 }
 
-export class NFTEntity extends EventTarget {
+export interface INFTEntity {
+    update(): void;
+    found(msg: any): void;
+    initialize(workerURL: string, cameraData: string): Promise<boolean>;
+    process(imageData: ImageData): void;
+}
+
+export class NFTEntity implements INFTEntity {
 
 
     private _nodes: IMediaNode[] = [];
-
-    public onNFTDataCallback!: Function;
 
     private _worker: NFTWorker;
 
@@ -20,30 +25,29 @@ export class NFTEntity extends EventTarget {
 
     protected orientationMatrix: any;
 
-    protected _markerURL : string;
+    protected _markerURL: string;
 
-    constructor( node : IMediaNode, markerURL : string) {
-        super();
+    constructor(node: IMediaNode, markerURL: string, w: number, h: number) {
         this._markerURL = markerURL;
-        this._worker = new NFTWorker(this, this._markerURL);
+        this._worker = new NFTWorker(this, this._markerURL, w, h);
 
         this._nodes.push(node);
     }
 
-    public initialize(workerURL : string, cameraData : string): Promise<boolean> {
+    public initialize(workerURL: string, cameraData: string): Promise<boolean> {
         this._workerURL = workerURL;
         this._cameraURL = cameraData;
         return this._worker.initialize(this._workerURL, this._cameraURL);
     }
 
     public found(msg: any): void {
-        this.orientationMatrix = (msg)? JSON.parse(msg.matrixGL_RH): null;
+        this.orientationMatrix = (msg) ? JSON.parse(msg.matrixGL_RH) : null;
         this._nodes.forEach(element => {
             element.found(this.orientationMatrix);
         });
     }
 
-    public process(imageData: ImageData) { 
+    public process(imageData: ImageData): void {
         this._worker.process(imageData);
     }
 

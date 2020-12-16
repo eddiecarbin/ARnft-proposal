@@ -1,6 +1,18 @@
 
+export interface VideoSettingData {
+    width: ScreenData;
+    height: ScreenData;
+    facingMode: string;
+}
+
+export interface ScreenData {
+    min: number;
+    max: number;
+}
 
 export interface ICameraViewRenderer {
+    getHeight(): number;
+    getWidth(): number;
     getImage(): ImageData;
 }
 
@@ -11,6 +23,8 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     private context_process: CanvasRenderingContext2D;
 
     public video: HTMLVideoElement;
+
+    private _facing: string;
 
     private vw: number;
     private vh: number;
@@ -27,28 +41,15 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     constructor(video: HTMLVideoElement) {
         this.canvas_process = document.createElement('canvas');
         this.context_process = this.canvas_process.getContext('2d');
-
         this.video = video;
-        let input_width = this.video.videoWidth;
-        let input_height = this.video.videoHeight;
+    }
 
-        this.vw = input_width;
-        this.vh = input_height;
+    public getHeight(): number {
+        return this.vh;
+    }
 
-        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
-
-        this.w = this.vw * pscale;
-        this.h = this.vh * pscale;
-        this.pw = Math.max(this.w, (this.h / 3) * 4);
-        this.ph = Math.max(this.h, (this.w / 4) * 3);
-        this.ox = (this.pw - this.w) / 2;
-        this.oy = (this.ph - this.h) / 2;
-
-        this.canvas_process.width = this.pw;
-        this.canvas_process.height = this.ph;
-
-        this.context_process.fillStyle = 'black';
-        this.context_process.fillRect(0, 0, this.pw, this.ph);
+    public getWidth(): number {
+        return this.vw;
     }
 
     public getImage(): ImageData {
@@ -56,14 +57,19 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         return this.context_process.getImageData(0, 0, this.pw, this.ph);
     }
 
-    public initialize(cameraData: any): Promise<boolean> {
+    public initialize(videoSettings: VideoSettingData): Promise<boolean> {
+
+        this._facing = videoSettings.facingMode || 'environment'
+
+        const constraints = {}
+        const mediaDevicesConstraints = {}
+
         return new Promise<boolean>(async (resolve, reject) => {
-            this.video = document.getElementById('video') as HTMLVideoElement;
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 var hint: any = {
                     "audio": false,
                     "video": {
-                        facingMode: 'environment',
+                        facingMode: this._facing,
                         width: { min: 480, max: 640 }
                     }
                 };
@@ -73,6 +79,24 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                     this.video = await new Promise<HTMLVideoElement>((resolve, reject) => {
                         this.video.onloadedmetadata = () => resolve(this.video);
                     }).then((value) => {
+
+                        this.vw = this.video.videoWidth;
+                        this.vh = this.video.videoHeight;
+
+                        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
+
+                        this.w = this.vw * pscale;
+                        this.h = this.vh * pscale;
+                        this.pw = Math.max(this.w, (this.h / 3) * 4);
+                        this.ph = Math.max(this.h, (this.w / 4) * 3);
+                        this.ox = (this.pw - this.w) / 2;
+                        this.oy = (this.ph - this.h) / 2;
+
+                        this.canvas_process.width = this.pw;
+                        this.canvas_process.height = this.ph;
+
+                        this.context_process.fillStyle = 'black';
+                        this.context_process.fillRect(0, 0, this.pw, this.ph);
                         resolve(true);
                         return value;
                     }).catch((msg) => {
@@ -84,12 +108,11 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                     console.error(error);
                     reject(error);
                 });
-
             }
             else {
-                reject("No navigator.mediaDevices && navigator.mediaDevices.getUserMedia");
+                // reject("No navigator.mediaDevices && navigator.mediaDevices.getUserMedia");
+                reject("Sorry, Your device does not support this experince.");
             }
         });
-
     }
 }
