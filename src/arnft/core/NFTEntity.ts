@@ -10,6 +10,7 @@ export interface INFTEntity {
     found(msg: any): void;
     initialize(workerURL: string, cameraData: string): Promise<boolean>;
     process(imageData: ImageData): void;
+    destroy(): void;
 }
 
 export class NFTEntity implements INFTEntity {
@@ -56,5 +57,9 @@ export class NFTEntity implements INFTEntity {
         this._nodes.forEach(element => {
             element.update();
         });
+    }
+
+    public destroy(): void {
+
     }
 }

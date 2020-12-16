@@ -83,4 +83,12 @@ export class ARnft {
                 element.process(imageData);
         });
     }
+
+    public destroy(): void {
+        this._controllers.forEach(entity => {
+            entity.destroy();
+        });
+        this._controllers.clear();
+        this.videoRenderer = null;
+    }
 }
