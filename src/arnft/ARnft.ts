@@ -31,7 +31,6 @@ export class ARnft {
     }
 
     public addNFTEntity(entity: INFTEntity, name?: string): INFTEntity {
-        // let entity = new NFTEntity(node, markerDataURL, this.videoRenderer.getWidth(), this.videoRenderer.getHeight());
 
         if (!name)
             name = "entity-" + this.count++;
@@ -61,8 +60,6 @@ export class ARnft {
         this._controllers.forEach(element => {
             promises.push(element.initialize(this._workerURL, this._cameraDataURL));
         });
-
-        // let promises: Promise<boolean>[] = this._controllers.map()
 
         return Promise.all(promises).then(() => {
             return true;

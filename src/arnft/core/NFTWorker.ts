@@ -1,4 +1,3 @@
-import { ARnft } from "app/arnft/ARnft";
 import { mat4, quat, vec3 } from "gl-matrix";
 import { NFTEntity } from "./NFTEntity";
 

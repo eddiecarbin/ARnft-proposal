@@ -1,4 +1,3 @@
-// import { Vector3 } from "@babylonjs/core/Maths/math";
 
 //https://github.com/DarioMazzanti/OneEuroFilterUnity/blob/master/Assets/Scripts/OneEuroFilter.cs
 //https://github.com/DarioMazzanti/OneEuroFilterUnity/blob/master/Assets/Scripts/FilterTestVector3.cs
