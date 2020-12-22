@@ -1,5 +1,12 @@
 import { ARnft } from "app/arnft/ARnft";
+import { mat4, quat, vec3 } from "gl-matrix";
 import { NFTEntity } from "./NFTEntity";
+
+
+export class NFTOrientation {
+    public position: number[];
+    public rotation: number[];
+}
 
 export class NFTWorker {
 
@@ -21,6 +28,7 @@ export class NFTWorker {
         this.vh = h;
     }
 
+    private vector3zero : vec3= vec3.create();
     public initialize(workerURL: string, cameraURL: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.worker = new Worker(workerURL);
@@ -28,10 +36,24 @@ export class NFTWorker {
                 this.load(cameraURL).then(() => {
                     // Overwrite load onmessage with search onmessage
                     this.worker.onmessage = (ev) => {
-
-                        // console.log("response found = " + (ev.data.type == "found"));
                         let msg: any = (ev.data.type == "found") ? ev.data : null;
-                        this._dispatcher.found(msg);
+                        let pckg: NFTOrientation | any;
+                        if (msg) {
+                            let m = this.getArrayMatrix(JSON.parse(msg.matrixGL_RH));
+                            let matrix: mat4 = mat4.fromValues(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], m[10], m[11], m[12], m[13], m[14], m[15]);
+
+                            let position: vec3 = vec3.create();
+                            mat4.getTranslation(position, matrix);
+
+                            let rotation: quat = quat.create();
+                            mat4.getRotation(rotation, matrix);
+
+                            pckg = new NFTOrientation();
+                            pckg.position = position.values();
+                            pckg.rotation = vec3.transformMat4(vec3.create(), this.vector3zero, matrix);
+
+                        }
+                        this._dispatcher.found(pckg);
                         this._processing = false;
                     };
                     //
@@ -42,6 +64,14 @@ export class NFTWorker {
         });
     }
 
+    protected getArrayMatrix(value: any): any {
+        var array: any = [];
+        for (var key in value) {
+            array[key] = value[key]; //.toFixed(4);
+        }
+        return array;
+    }
+
     public process(imageData: ImageData) {
 
         if (this._processing) {
@@ -50,7 +80,6 @@ export class NFTWorker {
         }
         this._processing = true;
 
-        //this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
         this.worker.postMessage({ type: 'process', imagedata: imageData });
     }
 

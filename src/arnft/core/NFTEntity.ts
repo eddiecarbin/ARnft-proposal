@@ -1,13 +1,13 @@
-import { NFTWorker } from "./NFTWorker";
+import { NFTOrientation, NFTWorker } from "./NFTWorker";
 
 export interface IMediaNode {
     update(): void;
-    found(value: any): void;
+    found(value: NFTOrientation): void;
 }
 
 export interface INFTEntity {
     update(): void;
-    found(msg: any): void;
+    found(msg: NFTOrientation): void;
     initialize(workerURL: string, cameraData: string): Promise<boolean>;
     process(imageData: ImageData): void;
     destroy(): void;
@@ -41,10 +41,10 @@ export class NFTEntity implements INFTEntity {
         return this._worker.initialize(this._workerURL, this._cameraURL);
     }
 
-    public found(msg: any): void {
-        this.orientationMatrix = (msg) ? JSON.parse(msg.matrixGL_RH) : null;
+    public found(msg: NFTOrientation): void {
+        // this.orientationMatrix = (msg) ? JSON.parse(msg.matrixGL_RH) : null;
         this._nodes.forEach(element => {
-            element.found(this.orientationMatrix);
+            element.found(msg);
         });
     }
 
