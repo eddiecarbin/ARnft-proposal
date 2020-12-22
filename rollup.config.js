@@ -12,7 +12,7 @@ export default {
 			//umd
 			format: 'umd',
 			name: 'ARNFT',
-			file: 'public/bundle.js',
+			file: 'public/arnft.core.js',
 			sourcemap: true,
 			globals: {
 				babylonjs: 'babylonjs',
