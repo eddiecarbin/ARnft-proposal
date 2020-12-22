@@ -28,7 +28,7 @@
       //  namespace of ARNFT
       //  pick your renderer.  I want to suggest that ARNft supports BabylonJS first.   Several reasons but ill start with its a better Game Engine/Framework. AR needs game features.
       //  Though THREEJS is a good framework!
-      const renderer = new ARNFT.Scene3DRendererBJS(document.getElementById("canvas")); //  or Scene3DRendererTHREE.js
+      // const renderer = new ARNFT.Scene3DRendererBJS(document.getElementById("canvas")); //  or Scene3DRendererTHREE.js
       await renderer.initialize();
       // add lights and camera here!
 
@@ -54,7 +54,7 @@
 
       // remove all loading work not asscoiated with ARnft.  I.E  asset types
       // provide a basic 3d model loader class as an example.  But it can be extended or dev can make thier own.  ARnft core should just expect the appropiate 3d model not do loading work.
-      let duck3DModel = await ARNFT.BasicModelLoaderBJS.load(duckData.model, renderer.getScene());
+      // let duck3DModel = await ARNFT.BasicModelLoaderBJS.load(duckData.model, renderer.getScene());
 
       let duckModelMarker = new ARNFT.NFT3DModelBJS(duck3DModel);
       arnft.addNFTEnity(duckModelMarker, duckData.marker);
@@ -65,7 +65,7 @@
         "video": "./data/test.mp4"
       }
 
-      let video = await ARNFT.BasicVideoLoaderBJS.load(videoMarker.video, renderer.getScene());
+      // let video = await ARNFT.BasicVideoLoaderBJS.load(videoMarker.video, renderer.getScene());
       let videoMarker = new ARNFT.NFTVideoBJS(video);
       arnft.addNFTEnity(videoMarker, videoData.marker);
 
@@ -74,7 +74,7 @@
         "marker": "./data/trex",
         "image": "./data/test.png"
       }
-      let image = await ARNFT.BasicImageLoaderBJS.load(imageData.image, renderer.getScene());
+      // let image = await ARNFT.BasicImageLoaderBJS.load(imageData.image, renderer.getScene());
       let imageMarker = new ARNFT.NFTImageBJS(image);
       arnft.addNFTEnity(imageMarker, imageData.marker);
 
