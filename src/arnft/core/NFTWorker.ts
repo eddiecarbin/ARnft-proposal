@@ -1,5 +1,6 @@
 import { mat4, quat, vec3 } from "gl-matrix";
 import { NFTEntity } from "./NFTEntity";
+import WorkerA from "./Worker";
 
 
 export class NFTOrientation {
@@ -28,9 +29,9 @@ export class NFTWorker {
     }
 
     private vector3zero : vec3= vec3.create();
-    public initialize(workerURL: string, cameraURL: string): Promise<boolean> {
+    public initialize(cameraURL: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.worker = new Worker(workerURL);
+            this.worker = new WorkerA();
             this.worker.onmessage = (ev) => {
                 this.load(cameraURL).then(() => {
                     // Overwrite load onmessage with search onmessage
