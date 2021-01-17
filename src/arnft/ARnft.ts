@@ -2,7 +2,7 @@ import { INFTEntity } from "./core/NFTEntity";
 import { ICameraViewRenderer } from "./core/renderers/CamerViewRenderer";
 
 export class ARnft {
-
+    
     private count: number = 0;
 
     private _controllers: Map<string, INFTEntity> = new Map<string, INFTEntity>();

@@ -7,6 +7,8 @@ export class NFTOrientation {
     public position: IterableIterator<number>;
     // qauaterion
     public rotation: IterableIterator<number>;
+
+    public matrix: IterableIterator<number>;
 }
 
 export class NFTWorker {
@@ -47,6 +49,7 @@ export class NFTWorker {
                             mat4.getRotation(this.rotation, matrix);
 
                             pckg = new NFTOrientation();
+                            pckg.matrix = matrix.values();
                             pckg.position = this.position.values();
                             pckg.rotation = this.rotation.values();
                         }
